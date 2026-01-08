@@ -25,4 +25,17 @@ namespace ControleGastosResidenciais.API.DTOs
         [Required]
         public DateTime DataTransacao { get; set; }
     }
+    public class TransacaoDto
+    {
+        public int Id { get; set; }
+        public string Descricao { get; set; }
+        public decimal Valor { get; set; }
+        public string Tipo { get; set; }
+        public int PessoaId { get; set; }
+        public string NomePessoa { get; set; }
+        public int CategoriaId { get; set; }
+        public string NomeCategoria { get; set; }
+        public DateTime DataTransacao { get; set; }
+    }
+
 }

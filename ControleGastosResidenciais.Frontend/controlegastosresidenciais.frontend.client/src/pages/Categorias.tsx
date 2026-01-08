@@ -1,5 +1,14 @@
-import { useEffect, useState } from "react";
+Ôªøimport { useEffect, useState } from "react";
 import { categoriaService } from "../services/CategoriaService";
+import PageContainer, {
+    formStyle,
+    inputStyle,
+    selectStyle,
+    buttonStyle,
+    tableStyle,
+    thStyle,
+    tdStyle,
+} from "../components/PageContainer";
 
 type Categoria = {
     id: number;
@@ -13,6 +22,7 @@ export function CategoriasPage() {
         descricao: "",
         finalidade: 1, // 1 = Despesa, 2 = Receita, 3 = Ambas
     });
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         async function fetchCategorias() {
@@ -25,55 +35,75 @@ export function CategoriasPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            setLoading(true);
             const criada = await categoriaService.criar(novaCategoria);
             setCategorias([criada, ...categorias]);
             setNovaCategoria({ descricao: "", finalidade: 1 });
-            alert("Categoria criada com sucesso!");
         } catch (error: any) {
             alert(error?.response?.data?.message || "Erro ao criar categoria");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div style={{ padding: 20 }}>
-            <h1>Categorias</h1>
-
-            <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
+        <PageContainer title="Categorias">
+            {/* Formul√°rio */}
+            <form onSubmit={handleSubmit} style={formStyle}>
                 <input
                     type="text"
-                    placeholder="DescriÁ„o"
+                    placeholder="Descri√ß√£o"
                     value={novaCategoria.descricao}
-                    onChange={(e) => setNovaCategoria({ ...novaCategoria, descricao: e.target.value })}
+                    onChange={(e) =>
+                        setNovaCategoria({ ...novaCategoria, descricao: e.target.value })
+                    }
+                    style={inputStyle}
                     required
                 />
                 <select
                     value={novaCategoria.finalidade}
-                    onChange={(e) => setNovaCategoria({ ...novaCategoria, finalidade: Number(e.target.value) })}
+                    onChange={(e) =>
+                        setNovaCategoria({ ...novaCategoria, finalidade: Number(e.target.value) })
+                    }
+                    style={selectStyle}
                 >
                     <option value={1}>Despesa</option>
                     <option value={2}>Receita</option>
                     <option value={3}>Ambas</option>
                 </select>
-                <button type="submit">Adicionar</button>
+                <button type="submit" style={buttonStyle} disabled={loading}>
+                    {loading ? "Salvando..." : "Adicionar"}
+                </button>
             </form>
 
-            <table border={1} cellPadding={5} style={{ width: "100%", borderCollapse: "collapse" }}>
+            {/* Tabela */}
+            <table style={tableStyle}>
                 <thead>
                     <tr>
-                        <th>DescriÁ„o</th>
-                        <th>Finalidade</th>
+                        <th style={thStyle}>Descri√ß√£o</th>
+                        <th style={thStyle}>Finalidade</th>
                     </tr>
                 </thead>
                 <tbody>
                     {categorias.map((c) => (
                         <tr key={c.id}>
-                            <td>{c.descricao}</td>
-                            <td>{c.finalidade === 1 ? "Despesa" : c.finalidade === 2 ? "Receita" : "Ambas"}</td>
+                            <td style={tdStyle}>{c.descricao}</td>
+                            <td style={tdStyle}>
+                                {c.finalidade === 1
+                                    ? "Despesa"
+                                    : c.finalidade === 2
+                                        ? "Receita"
+                                        : "Ambas"}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-        </div>
+
+            {categorias.length === 0 && <p>Nenhuma categoria cadastrada.</p>}
+        </PageContainer>
     );
 }
+
 export default CategoriasPage;
+

@@ -1,14 +1,13 @@
-import type { Pessoa } from "./Pessoa";
+﻿import type { Pessoa } from "./Pessoa";
 import type { Categoria } from "./Categoria";
 
 export interface Transacao {
     id: number;
     descricao: string;
     valor: number;
-    tipo: number;
+    tipo: "Despesa" | "Receita";
     dataTransacao: string;
-    pessoaId: number;
-    categoriaId: number;
-    pessoa?: Pessoa;
-    categoria?: Categoria;
+    nomePessoa: string;
+    nomeCategoria: string;
 }
+

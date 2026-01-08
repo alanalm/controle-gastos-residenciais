@@ -1,6 +1,6 @@
-import { api } from "../api/api";
+ï»¿import { api } from "../api/api";
 
-// Funções relacionadas ao controller Pessoas
+// FunÃ§Ãµes relacionadas ao controller Pessoas
 export const pessoaService = {
     // Buscar todas as pessoas
     async obterTodas() {
@@ -26,3 +26,4 @@ export const pessoaService = {
         return response.data;
     },
 };
+

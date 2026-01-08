@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+ï»¿import { useEffect, useState } from "react";
 import { categoriaService } from "../services/CategoriaService";
 import { pessoaService } from "../services/PessoaService";
 import { transacaoService } from "../services/TransacaoService";
@@ -6,6 +6,15 @@ import type { Transacao } from "../models/Transacao";
 import type { Pessoa } from "../models/Pessoa";
 import type { Categoria } from "../models/Categoria";
 
+import PageContainer, {
+    formStyle,
+    inputStyle,
+    selectStyle,
+    buttonStyle,
+    tableStyle,
+    thStyle,
+    tdStyle,
+} from "../components/PageContainer";
 
 export function TransacoesPage() {
     const [transacoes, setTransacoes] = useState<Transacao[]>([]);
@@ -19,6 +28,7 @@ export function TransacoesPage() {
         categoriaId: 0,
         dataTransacao: new Date().toISOString().slice(0, 10),
     });
+    const [loading, setLoading] = useState(false);
 
     // Carregar dados iniciais
     useEffect(() => {
@@ -35,30 +45,31 @@ export function TransacoesPage() {
         fetchData();
     }, []);
 
-    // Criar transação
+    // Criar transaÃ§Ã£o
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            setLoading(true);
             const criada = await transacaoService.criar(novaTransacao);
             setTransacoes([criada, ...transacoes]);
             setNovaTransacao({ ...novaTransacao, descricao: "", valor: 0 });
-            alert("Transação criada com sucesso!");
         } catch (error: any) {
-            alert(error?.response?.data?.message || "Erro ao criar transação");
+            alert(error?.response?.data?.message || "Erro ao criar transaÃ§Ã£o");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div style={{ padding: 20 }}>
-            <h1>Transações</h1>
-
-            {/* Formulário de criação */}
-            <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
+        <PageContainer title="TransaÃ§Ãµes">
+            {/* FormulÃ¡rio */}
+            <form onSubmit={handleSubmit} style={formStyle}>
                 <input
                     type="text"
-                    placeholder="Descrição"
+                    placeholder="DescriÃ§Ã£o"
                     value={novaTransacao.descricao}
                     onChange={(e) => setNovaTransacao({ ...novaTransacao, descricao: e.target.value })}
+                    style={inputStyle}
                     required
                 />
                 <input
@@ -66,11 +77,13 @@ export function TransacoesPage() {
                     placeholder="Valor"
                     value={novaTransacao.valor}
                     onChange={(e) => setNovaTransacao({ ...novaTransacao, valor: Number(e.target.value) })}
+                    style={inputStyle}
                     required
                 />
                 <select
                     value={novaTransacao.tipo}
                     onChange={(e) => setNovaTransacao({ ...novaTransacao, tipo: Number(e.target.value) })}
+                    style={selectStyle}
                 >
                     <option value={1}>Despesa</option>
                     <option value={2}>Receita</option>
@@ -78,6 +91,7 @@ export function TransacoesPage() {
                 <select
                     value={novaTransacao.pessoaId}
                     onChange={(e) => setNovaTransacao({ ...novaTransacao, pessoaId: Number(e.target.value) })}
+                    style={selectStyle}
                     required
                 >
                     <option value={0}>Selecione a Pessoa</option>
@@ -90,6 +104,7 @@ export function TransacoesPage() {
                 <select
                     value={novaTransacao.categoriaId}
                     onChange={(e) => setNovaTransacao({ ...novaTransacao, categoriaId: Number(e.target.value) })}
+                    style={selectStyle}
                     required
                 >
                     <option value={0}>Selecione a Categoria</option>
@@ -103,37 +118,44 @@ export function TransacoesPage() {
                     type="date"
                     value={novaTransacao.dataTransacao}
                     onChange={(e) => setNovaTransacao({ ...novaTransacao, dataTransacao: e.target.value })}
+                    style={inputStyle}
                     required
                 />
-                <button type="submit">Adicionar</button>
+                <button type="submit" style={buttonStyle} disabled={loading}>
+                    {loading ? "Salvando..." : "Adicionar"}
+                </button>
             </form>
 
-            {/* Lista de transações */}
-            <table border={1} cellPadding={5} style={{ width: "100%", borderCollapse: "collapse" }}>
+            {/* Tabela */}
+            <table style={tableStyle}>
                 <thead>
                     <tr>
-                        <th>Descrição</th>
-                        <th>Valor</th>
-                        <th>Tipo</th>
-                        <th>Pessoa</th>
-                        <th>Categoria</th>
-                        <th>Data</th>
+                        <th style={thStyle}>DescriÃ§Ã£o</th>
+                        <th style={thStyle}>Valor</th>
+                        <th style={thStyle}>Tipo</th>
+                        <th style={thStyle}>Pessoa</th>
+                        <th style={thStyle}>Categoria</th>
+                        <th style={thStyle}>Data</th>
                     </tr>
                 </thead>
                 <tbody>
                     {transacoes.map((t) => (
                         <tr key={t.id}>
-                            <td>{t.descricao}</td>
-                            <td>{t.valor.toFixed(2)}</td>
-                            <td>{t.tipo === 1 ? "Despesa" : "Receita"}</td>
-                            <td>{t.pessoa?.nome ?? "—"}</td>
-                            <td>{t.categoria?.descricao ?? "—"}</td>
-                            <td>{new Date(t.dataTransacao).toLocaleDateString('pt-BR')}</td>
+                            <td style={tdStyle}>{t.descricao}</td>
+                            <td style={tdStyle}>R$ {t.valor.toFixed(2)}</td>
+                            <td style={tdStyle}>{Number(t.tipo) === 1 ? "Despesa" : "Receita"}</td>
+                            <td style={tdStyle}>{t.nomePessoa ?? "â€”"}</td>
+                            <td style={tdStyle}>{t.nomeCategoria ?? "â€”"}</td>
+                            <td style={tdStyle}>{new Date(t.dataTransacao).toLocaleDateString("pt-BR")}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-        </div>
+
+            {transacoes.length === 0 && <p>Nenhuma transaÃ§Ã£o cadastrada.</p>}
+        </PageContainer>
     );
 }
+
 export default TransacoesPage;
+
