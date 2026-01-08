@@ -25,9 +25,9 @@ builder.Services.AddSwaggerGen();
 // CORS para o front-end React poder acessar
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReact", policy =>
+    options.AddPolicy("frontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
+        policy.WithOrigins("https://localhost:63374")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -50,7 +50,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowReact");
+app.UseCors("frontend");
 app.UseAuthorization();
 app.MapControllers();
 

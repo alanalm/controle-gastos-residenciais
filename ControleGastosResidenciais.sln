@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36705.20 d17.14
+VisualStudioVersion = 17.14.36705.20
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControleGastosResidenciais.API", "ControleGastosResidenciais.API\ControleGastosResidenciais.API.csproj", "{1B4A8767-CE8D-41B4-966B-D1F9A3AE4380}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "ControleGastosResidenciais.Frontend.Client", "ControleGastosResidenciais.Frontend\controlegastosresidenciais.frontend.client\ControleGastosResidenciais.Frontend.Client.esproj", "{E8982A94-D210-E345-0C2C-F7218C78851A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,12 @@ Global
 		{1B4A8767-CE8D-41B4-966B-D1F9A3AE4380}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B4A8767-CE8D-41B4-966B-D1F9A3AE4380}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B4A8767-CE8D-41B4-966B-D1F9A3AE4380}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8982A94-D210-E345-0C2C-F7218C78851A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8982A94-D210-E345-0C2C-F7218C78851A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8982A94-D210-E345-0C2C-F7218C78851A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E8982A94-D210-E345-0C2C-F7218C78851A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8982A94-D210-E345-0C2C-F7218C78851A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8982A94-D210-E345-0C2C-F7218C78851A}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
