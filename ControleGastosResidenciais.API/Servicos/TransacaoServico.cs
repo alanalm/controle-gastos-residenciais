@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastosResidenciais.API.Servicos
 {
-    public class TransacaoService
+    public class TransacaoServico
     {
         private readonly ControleGastosDbContext _context;
 
-        public TransacaoService(ControleGastosDbContext context)
+        public TransacaoServico(ControleGastosDbContext context)
         {
             _context = context;
         }

@@ -8,11 +8,11 @@ namespace ControleGastosResidenciais.API.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(200)]
+        [StringLength(100)]
         public string Nome { get; set; } = string.Empty;
 
         [Required]
-        [Range(0, 116)]
+        [Range(0, 120)]
         public int Idade { get; set; }
 
         public DateTime DataCriacao { get; set; }

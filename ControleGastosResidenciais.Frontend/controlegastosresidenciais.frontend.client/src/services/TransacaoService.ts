@@ -1,4 +1,5 @@
 ﻿import { api } from "../api/api";
+import axios from "axios";
 
 export const transacaoService = {
     async obterTodas() {
@@ -24,8 +25,22 @@ export const transacaoService = {
         pessoaId: number;
         dataTransacao?: string;
     }) {
-        const response = await api.post("/transacoes", transacao);
-        return response.data;
+        try {
+            const response = await api.post("/transacoes", transacao);
+            return response.data;
+        } catch (error: any) {
+            // Se for erro do Axios e a API retornou mensagem
+            if (axios.isAxiosError(error)) {
+                const mensagem =
+                    error.response?.data?.mensagem ||
+                    error.response?.data ||
+                    "Erro ao criar transação.";
+
+                throw mensagem;
+            }
+
+            // Erro inesperado
+            throw "Erro inesperado ao criar transação.";
+        }
     },
 };
-

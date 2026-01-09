@@ -31,7 +31,7 @@ namespace ControleGastosResidenciais.API.Data
             modelBuilder.Entity<Pessoa>(entity =>
             {
                 entity.HasKey(p => p.Id);
-                entity.Property(p => p.Nome).IsRequired().HasMaxLength(200);
+                entity.Property(p => p.Nome).IsRequired().HasMaxLength(100);
                 entity.Property(p => p.Idade).IsRequired();
                 entity.HasIndex(p => p.Nome); // Índice para busca por nome
             });
@@ -51,7 +51,7 @@ namespace ControleGastosResidenciais.API.Data
             modelBuilder.Entity<Transacao>(entity =>
             {
                 entity.HasKey(t => t.Id);
-                entity.Property(t => t.Descricao).IsRequired().HasMaxLength(500);
+                entity.Property(t => t.Descricao).IsRequired().HasMaxLength(150);
                 entity.Property(t => t.Valor)
                       .IsRequired()
                       .HasColumnType("decimal(18,2)"); // Precisão para valores monetários

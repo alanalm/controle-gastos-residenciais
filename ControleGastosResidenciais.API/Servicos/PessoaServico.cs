@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastosResidenciais.API.Servicos
 {
-    public class PessoaService
+    public class PessoaServico
     {
         private readonly ControleGastosDbContext _context;
 
-        public PessoaService(ControleGastosDbContext context)
+        public PessoaServico(ControleGastosDbContext context)
         {
             _context = context;
         }

@@ -29,6 +29,7 @@ export function TransacoesPage() {
         dataTransacao: new Date().toISOString().slice(0, 10),
     });
     const [loading, setLoading] = useState(false);
+    const [erro, setErro] = useState<string | null>(null);
 
     // Carregar dados iniciais
     useEffect(() => {
@@ -54,7 +55,13 @@ export function TransacoesPage() {
             setTransacoes([criada, ...transacoes]);
             setNovaTransacao({ ...novaTransacao, descricao: "", valor: 0 });
         } catch (error: any) {
-            alert(error?.response?.data?.message || "Erro ao criar transação");
+            const mensagem =
+                error?.response?.data?.message ||
+                error?.response?.data ||
+                error?.message ||
+                "Erro ao criar transação";
+
+            setErro(mensagem);
         } finally {
             setLoading(false);
         }
@@ -63,6 +70,20 @@ export function TransacoesPage() {
     return (
         <PageContainer title="Transações">
             {/* Formulário */}
+            {erro && (
+                <div
+                    style={{
+                        backgroundColor: "#fee2e2",
+                        color: "#991b1b",
+                        padding: "10px",
+                        borderRadius: 6,
+                        marginBottom: 16,
+                        fontWeight: 500,
+                    }}
+                >
+                    {erro}
+                </div>
+            )}
             <form onSubmit={handleSubmit} style={formStyle}>
                 <input
                     type="text"

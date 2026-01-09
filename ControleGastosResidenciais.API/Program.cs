@@ -1,4 +1,4 @@
-using ControleGastosResidenciais.API.Data;
+﻿using ControleGastosResidenciais.API.Data;
 using ControleGastosResidenciais.API.Servicos;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,9 +11,9 @@ builder.Services.AddDbContext<ControleGastosDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //Servicos
-builder.Services.AddScoped<PessoaService>();
-builder.Services.AddScoped<CategoriaService>();
-builder.Services.AddScoped<TransacaoService>();
+builder.Services.AddScoped<PessoaServico>();
+builder.Services.AddScoped<CategoriaServico>();
+builder.Services.AddScoped<TransacaoServico>();
 
 // Controllers
 builder.Services.AddControllers();
