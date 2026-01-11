@@ -1,5 +1,6 @@
 ﻿import { useEffect, useState } from "react";
 import { categoriaService } from "../services/CategoriaService";
+import type { Categoria } from "../models/Categoria";
 import PageContainer, {
     formStyle,
     inputStyle,
@@ -10,12 +11,10 @@ import PageContainer, {
     tdStyle,
 } from "../components/PageContainer";
 
-type Categoria = {
-    id: number;
-    descricao: string;
-    finalidade: number;
-};
-
+/**
+ * Página responsável pelo cadastro e listagem de categorias financeiras.
+ * Permite definir a finalidade da categoria (Despesa, Receita ou Ambas).
+ */
 export function CategoriasPage() {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [novaCategoria, setNovaCategoria] = useState({
@@ -32,6 +31,10 @@ export function CategoriasPage() {
         fetchCategorias();
     }, []);
 
+    /**
+ * Realiza o cadastro de uma nova categoria e atualiza a lista local
+ * sem a necessidade de nova requisição ao backend.
+ */
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {

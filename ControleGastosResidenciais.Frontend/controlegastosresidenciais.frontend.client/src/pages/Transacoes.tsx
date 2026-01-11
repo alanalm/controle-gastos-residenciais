@@ -16,6 +16,11 @@ import PageContainer, {
     tdStyle,
 } from "../components/PageContainer";
 
+/**
+ * Página responsável pelo cadastro e listagem de transações financeiras.
+ * As transações podem ser despesas ou receitas e são vinculadas
+ * a uma pessoa e a uma categoria.
+ */
 export function TransacoesPage() {
     const [transacoes, setTransacoes] = useState<Transacao[]>([]);
     const [pessoas, setPessoas] = useState<Pessoa[]>([]);
@@ -31,7 +36,7 @@ export function TransacoesPage() {
     const [loading, setLoading] = useState(false);
     const [erro, setErro] = useState<string | null>(null);
 
-    // Carregar dados iniciais
+    // Carrega pessoas, categorias e transações em paralelo ao iniciar a página
     useEffect(() => {
         async function fetchData() {
             const [pessoasData, categoriasData, transacoesData] = await Promise.all([
@@ -46,14 +51,26 @@ export function TransacoesPage() {
         fetchData();
     }, []);
 
-    // Criar transação
+    // Envia a nova transação para a API e atualiza a lista local
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (novaTransacao.pessoaId === 0 || novaTransacao.categoriaId === 0) {
+            setErro("Selecione uma pessoa e uma categoria.");
+            return;
+        }
         try {
+            setErro(null);
             setLoading(true);
             const criada = await transacaoService.criar(novaTransacao);
             setTransacoes([criada, ...transacoes]);
-            setNovaTransacao({ ...novaTransacao, descricao: "", valor: 0 });
+            setNovaTransacao({
+                descricao: "",
+                valor: 0,
+                tipo: 1,
+                pessoaId: 0,
+                categoriaId: 0,
+                dataTransacao: new Date().toISOString().slice(0, 10),
+            });
         } catch (error: any) {
             const mensagem =
                 error?.response?.data?.message ||
@@ -142,9 +159,11 @@ export function TransacoesPage() {
                     style={inputStyle}
                     required
                 />
-                <button type="submit" style={buttonStyle} disabled={loading}>
-                    {loading ? "Salvando..." : "Adicionar"}
-                </button>
+                <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+                    <button type="submit" style={buttonStyle} disabled={loading}>
+                        {loading ? "Salvando..." : "Adicionar"}
+                    </button>
+                </div>
             </form>
 
             {/* Tabela */}
@@ -164,7 +183,7 @@ export function TransacoesPage() {
                         <tr key={t.id}>
                             <td style={tdStyle}>{t.descricao}</td>
                             <td style={tdStyle}>R$ {t.valor.toFixed(2)}</td>
-                            <td style={tdStyle}>{Number(t.tipo) === 1 ? "Despesa" : "Receita"}</td>
+                            <td style={tdStyle}>{t.tipo === 1 ? "Despesa" : "Receita"}</td>
                             <td style={tdStyle}>{t.nomePessoa ?? "—"}</td>
                             <td style={tdStyle}>{t.nomeCategoria ?? "—"}</td>
                             <td style={tdStyle}>{new Date(t.dataTransacao).toLocaleDateString("pt-BR")}</td>

@@ -31,7 +31,7 @@ namespace ControleGastosResidenciais.API.DTOs
         public int Id { get; set; }
         public string Descricao { get; set; }
         public decimal Valor { get; set; }
-        public string Tipo { get; set; }
+        public TipoTransacao Tipo { get; set; }
         public int PessoaId { get; set; }
         public string NomePessoa { get; set; }
         public int CategoriaId { get; set; }

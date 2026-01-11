@@ -8,10 +8,13 @@ import PageContainer, {
     tableStyle,
     thStyle,
     tdStyle,
-    actionButtonStyle,
     deleteButtonStyle,
 } from "../components/PageContainer";
 
+/**
+ * Página responsável pelo cadastro, listagem e exclusão de pessoas.
+ * As pessoas representam os moradores ou responsáveis pelas transações.
+ */
 export function PessoasPage() {
     const [pessoas, setPessoas] = useState<Pessoa[]>([]);
     const [novaPessoa, setNovaPessoa] = useState({ nome: "", idade: 0 });
@@ -40,6 +43,10 @@ export function PessoasPage() {
         }
     }
 
+  /**
+   * Remove uma pessoa após confirmação do usuário
+   * e atualiza a lista local sem nova requisição.
+   */
     async function handleDelete(id: number) {
         if (!window.confirm("Deseja realmente excluir esta pessoa?")) return;
 

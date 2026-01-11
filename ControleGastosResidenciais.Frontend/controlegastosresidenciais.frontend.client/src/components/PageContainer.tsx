@@ -5,6 +5,10 @@ type PageContainerProps = {
     children: ReactNode;
 };
 
+/**
+ * Componente base de layout utilizado pelas páginas da aplicação.
+ * Responsável por padronizar título, espaçamento e estilos visuais.
+ */
 export default function PageContainer({ title, children }: PageContainerProps) {
     return (
         <div style={containerStyle}>

@@ -27,7 +27,7 @@ namespace ControleGastosResidenciais.API.Servicos
                     Id = t.Id,
                     Descricao = t.Descricao,
                     Valor = t.Valor,
-                    Tipo = t.Tipo.ToString(),
+                    Tipo = t.Tipo,
                     DataTransacao = t.DataTransacao,
 
                     PessoaId = t.PessoaId,
