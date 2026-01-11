@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastosResidenciais.API.Servicos
 {
-    public class CategoriaService
+    public class CategoriaServico
     {
         private readonly ControleGastosDbContext _context;
 
-        public CategoriaService(ControleGastosDbContext context)
+        public CategoriaServico(ControleGastosDbContext context)
         {
             _context = context;
         }
@@ -31,6 +31,7 @@ namespace ControleGastosResidenciais.API.Servicos
         }
 
         // Cria uma nova categoria
+        // Centraliza regras de negócio para criação de categorias
         public async Task<Categoria> CriarAsync(Categoria categoria)
         {
             // Validações

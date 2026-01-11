@@ -6,7 +6,7 @@ namespace ControleGastosResidenciais.API.DTOs
     public class CriarCategoriaDto
     {
         [Required]
-        [StringLength(200)]
+        [StringLength(100)]
         public string Descricao { get; set; } = string.Empty;
 
         [Required]

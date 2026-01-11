@@ -3,10 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ControleGastosResidenciais.API.DTOs
 {
+    // DTO utilizado para criação de uma nova transação via API
     public class CriarTransacaoDto
     {
         [Required]
-        [StringLength(500)]
+        [StringLength(150)]
         public string Descricao { get; set; } = string.Empty;
 
         [Required]
@@ -25,4 +26,17 @@ namespace ControleGastosResidenciais.API.DTOs
         [Required]
         public DateTime DataTransacao { get; set; }
     }
+    public class TransacaoDto
+    {
+        public int Id { get; set; }
+        public string Descricao { get; set; }
+        public decimal Valor { get; set; }
+        public TipoTransacao Tipo { get; set; }
+        public int PessoaId { get; set; }
+        public string NomePessoa { get; set; }
+        public int CategoriaId { get; set; }
+        public string NomeCategoria { get; set; }
+        public DateTime DataTransacao { get; set; }
+    }
+
 }

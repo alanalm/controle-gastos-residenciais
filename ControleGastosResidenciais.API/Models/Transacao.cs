@@ -10,7 +10,7 @@ namespace ControleGastosResidenciais.API.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(500)]
+        [StringLength(150)]
         public string Descricao { get; set; } = string.Empty;
 
         [Required]
@@ -31,7 +31,7 @@ namespace ControleGastosResidenciais.API.Models
         [Required]
         public DateTime DataTransacao { get; set; }
 
-        // Navegação
+        // Propriedades de navegação (não serializadas para evitar loops)
         [JsonIgnore]
         public Categoria? Categoria { get; set; }
 

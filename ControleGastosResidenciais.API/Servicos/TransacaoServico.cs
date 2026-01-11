@@ -1,28 +1,44 @@
 ﻿using ControleGastosResidenciais.API.Data;
+using ControleGastosResidenciais.API.DTOs;
 using ControleGastosResidenciais.API.Models;
 using ControleGastosResidenciais.API.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastosResidenciais.API.Servicos
 {
-    public class TransacaoService
+    public class TransacaoServico
     {
         private readonly ControleGastosDbContext _context;
 
-        public TransacaoService(ControleGastosDbContext context)
+        public TransacaoServico(ControleGastosDbContext context)
         {
             _context = context;
         }
 
         // Retorna todas as transações com pessoa e categoria
-        public async Task<List<Transacao>> ObterTodasAsync()
+        public async Task<List<TransacaoDto>> ObterTodasAsync()
         {
             return await _context.Transacoes
                 .Include(t => t.Pessoa)
                 .Include(t => t.Categoria)
                 .OrderByDescending(t => t.DataTransacao)
+                .Select(t => new TransacaoDto
+                {
+                    Id = t.Id,
+                    Descricao = t.Descricao,
+                    Valor = t.Valor,
+                    Tipo = t.Tipo,
+                    DataTransacao = t.DataTransacao,
+
+                    PessoaId = t.PessoaId,
+                    NomePessoa = t.Pessoa.Nome,
+
+                    CategoriaId = t.CategoriaId,
+                    NomeCategoria = t.Categoria.Descricao
+                })
                 .ToListAsync();
         }
+
 
         // Retorna uma transação por ID
         public async Task<Transacao?> ObterPorIdAsync(int id)

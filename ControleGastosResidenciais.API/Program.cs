@@ -1,4 +1,4 @@
-using ControleGastosResidenciais.API.Data;
+﻿using ControleGastosResidenciais.API.Data;
 using ControleGastosResidenciais.API.Servicos;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,9 +11,9 @@ builder.Services.AddDbContext<ControleGastosDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //Servicos
-builder.Services.AddScoped<PessoaService>();
-builder.Services.AddScoped<CategoriaService>();
-builder.Services.AddScoped<TransacaoService>();
+builder.Services.AddScoped<PessoaServico>();
+builder.Services.AddScoped<CategoriaServico>();
+builder.Services.AddScoped<TransacaoServico>();
 
 // Controllers
 builder.Services.AddControllers();
@@ -25,9 +25,9 @@ builder.Services.AddSwaggerGen();
 // CORS para o front-end React poder acessar
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReact", policy =>
+    options.AddPolicy("frontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
+        policy.WithOrigins("https://localhost:63374")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -50,7 +50,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowReact");
+app.UseCors("frontend");
 app.UseAuthorization();
 app.MapControllers();
 

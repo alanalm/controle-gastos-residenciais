@@ -9,20 +9,20 @@ namespace ControleGastosResidenciais.API.Controllers
     [Route("api/[controller]")]
     public class TransacoesController : ControllerBase
     {
-        private readonly TransacaoService _transacaoService;
+        private readonly TransacaoServico _transacaoServico;
 
-        public TransacoesController(TransacaoService transacaoService)
+        public TransacoesController(TransacaoServico transacaoServico)
         {
-            _transacaoService = transacaoService;
+            _transacaoServico = transacaoServico;
         }
 
         // Retorna todas as transações cadastradas
         [HttpGet]
-        public async Task<ActionResult<List<Transacao>>> GetAll()
+        public async Task<ActionResult<List<TransacaoDto>>> ObterTodos()
         {
             try
             {
-                var transacoes = await _transacaoService.ObterTodasAsync();
+                var transacoes = await _transacaoServico.ObterTodasAsync();
                 return Ok(transacoes);
             }
             catch (Exception ex)
@@ -33,11 +33,11 @@ namespace ControleGastosResidenciais.API.Controllers
 
         // Retorna uma transação específica por ID
         [HttpGet("{id}")]
-        public async Task<ActionResult<Transacao>> GetById(int id)
+        public async Task<ActionResult<Transacao>> ObterPorId(int id)
         {
             try
             {
-                var transacao = await _transacaoService.ObterPorIdAsync(id);
+                var transacao = await _transacaoServico.ObterPorIdAsync(id);
 
                 if (transacao == null)
                     return NotFound(new { message = "Transação não encontrada" });
@@ -52,11 +52,13 @@ namespace ControleGastosResidenciais.API.Controllers
 
         // Retorna todas as transações de uma pessoa específica
         [HttpGet("pessoa/{pessoaId}")]
-        public async Task<ActionResult<List<Transacao>>> GetByPessoa(int pessoaId)
+        public async Task<ActionResult<List<Transacao>>> ObterPorPessoa(int pessoaId)
         {
             try
             {
-                var transacoes = await _transacaoService.ObterPorPessoaAsync(pessoaId);
+                var transacoes = await _transacaoServico.ObterPorPessoaAsync(pessoaId);
+                if (!transacoes.Any())
+                    return NotFound(new { message = "Pessoa não encontrada ou sem transações" });
                 return Ok(transacoes);
             }
             catch (Exception ex)
@@ -67,24 +69,35 @@ namespace ControleGastosResidenciais.API.Controllers
 
         // Cria uma nova transação 
         [HttpPost]
-        public async Task<ActionResult<Transacao>> Create(CriarTransacaoDto dto)
+        public async Task<ActionResult<Transacao>> Criar(CriarTransacaoDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var transacao = new Transacao
+            try
             {
-                Descricao = dto.Descricao,
-                Valor = dto.Valor,
-                Tipo = dto.Tipo,
-                PessoaId = dto.PessoaId,
-                CategoriaId = dto.CategoriaId,
-                DataTransacao = dto.DataTransacao
-            };
+                var transacao = new Transacao
+                {
+                    Descricao = dto.Descricao,
+                    Valor = dto.Valor,
+                    Tipo = dto.Tipo,
+                    PessoaId = dto.PessoaId,
+                    CategoriaId = dto.CategoriaId,
+                    DataTransacao = dto.DataTransacao
+                };
 
-            var criada = await _transacaoService.CriarAsync(transacao);
+                var criada = await _transacaoServico.CriarAsync(transacao);
 
-            return CreatedAtAction(nameof(GetById), new { id = criada.Id }, criada);
+                return CreatedAtAction(nameof(ObterPorId), new { id = criada.Id }, criada);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

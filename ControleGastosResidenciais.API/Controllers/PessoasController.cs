@@ -9,20 +9,20 @@ namespace ControleGastosResidenciais.API.Controllers
     [Route("api/[controller]")]
     public class PessoasController : ControllerBase
     {
-        private readonly PessoaService _pessoaService;
+        private readonly PessoaServico _pessoaServico;
 
-        public PessoasController(PessoaService pessoaService)
+        public PessoasController(PessoaServico pessoaService)
         {
-            _pessoaService = pessoaService;
+            _pessoaServico = pessoaService;
         }
 
         // Retorna todas as pessoas cadastradas
         [HttpGet]
-        public async Task<ActionResult<List<Pessoa>>> GetAll()
+        public async Task<ActionResult<List<Pessoa>>> ObterTodos()
         {
             try
             {
-                var pessoas = await _pessoaService.ObterTodasAsync();
+                var pessoas = await _pessoaServico.ObterTodasAsync();
                 return Ok(pessoas);
             }
             catch (Exception ex)
@@ -33,11 +33,11 @@ namespace ControleGastosResidenciais.API.Controllers
 
         // Retorna uma pessoa específica por ID
         [HttpGet("{id}")]
-        public async Task<ActionResult<Pessoa>> GetById(int id)
+        public async Task<ActionResult<Pessoa>> ObterPorId(int id)
         {
             try
             {
-                var pessoa = await _pessoaService.ObterPorIdAsync(id);
+                var pessoa = await _pessoaServico.ObterPorIdAsync(id);
 
                 if (pessoa == null)
                     return NotFound(new { message = "Pessoa não encontrada" });
@@ -52,33 +52,44 @@ namespace ControleGastosResidenciais.API.Controllers
 
         // Cria uma nova pessoa
         [HttpPost]
-        public async Task<ActionResult<Pessoa>> Create(CriarPessoaDto dto)
+        public async Task<ActionResult<Pessoa>> Criar(CriarPessoaDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var pessoa = new Pessoa
+            try
             {
-                Nome = dto.Nome,
-                Idade = dto.Idade
-            };
+                var pessoa = new Pessoa
+                {
+                    Nome = dto.Nome,
+                    Idade = dto.Idade
+                };
 
-            var criada = await _pessoaService.CriarAsync(pessoa);
+                var criada = await _pessoaServico.CriarAsync(pessoa);
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = criada.Id },
-                criada
-            );
+                return CreatedAtAction(
+                    nameof(ObterPorId),
+                    new { id = criada.Id },
+                    criada
+                );
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Erro ao criar pessoa", error = ex.Message });
+            }
         }
 
         // Deleta uma pessoa e todas suas transações
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Deletar(int id)
         {
             try
             {
-                var deletado = await _pessoaService.DeletarAsync(id);
+                var deletado = await _pessoaServico.DeletarAsync(id);
 
                 if (!deletado)
                     return NotFound(new { message = "Pessoa não encontrada" });

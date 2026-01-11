@@ -9,20 +9,20 @@ namespace ControleGastosResidenciais.API.Controllers
     [Route("api/[controller]")]
     public class CategoriasController : ControllerBase
     {
-        private readonly CategoriaService _categoriaService;
+        private readonly CategoriaServico _categoriaServico;
 
-        public CategoriasController(CategoriaService categoriaService)
+        public CategoriasController(CategoriaServico categoriaService)
         {
-            _categoriaService = categoriaService;
+            _categoriaServico = categoriaService;
         }
 
         // Retorna todas as categorias cadastradas
         [HttpGet]
-        public async Task<ActionResult<List<Categoria>>> GetAll()
+        public async Task<ActionResult<List<Categoria>>> ObterTodos()
         {
             try
             {
-                var categorias = await _categoriaService.ObterTodasAsync();
+                var categorias = await _categoriaServico.ObterTodasAsync();
                 return Ok(categorias);
             }
             catch (Exception ex)
@@ -33,11 +33,11 @@ namespace ControleGastosResidenciais.API.Controllers
 
         // Retorna uma categoria específica por ID
         [HttpGet("{id}")]
-        public async Task<ActionResult<Categoria>> GetById(int id)
+        public async Task<ActionResult<Categoria>> ObterPorId(int id)
         {
             try
             {
-                var categoria = await _categoriaService.ObterPorIdAsync(id);
+                var categoria = await _categoriaServico.ObterPorIdAsync(id);
 
                 if (categoria == null)
                     return NotFound(new { message = "Categoria não encontrada" });
@@ -52,24 +52,39 @@ namespace ControleGastosResidenciais.API.Controllers
 
         // Cria uma nova categoria
         [HttpPost]
-        public async Task<ActionResult<Categoria>> Create(CriarCategoriaDto dto)
+        public async Task<ActionResult<Categoria>> Criar(CriarCategoriaDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var categoria = new Categoria
+            try
             {
-                Descricao = dto.Descricao,
-                Finalidade = dto.Finalidade
-            };
+                var categoria = new Categoria
+                {
+                    Descricao = dto.Descricao,
+                    Finalidade = dto.Finalidade
+                };
 
-            var criada = await _categoriaService.CriarAsync(categoria);
+                var criada = await _categoriaServico.CriarAsync(categoria);
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = criada.Id },
-                criada
-            );
+                return CreatedAtAction(
+                    nameof(ObterPorId),
+                    new { id = criada.Id },
+                    criada
+                );
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Erro ao criar categoria", error = ex.Message });
+            }
         }
     }
 }
