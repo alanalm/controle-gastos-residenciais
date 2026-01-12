@@ -1,6 +1,6 @@
 # 📊 Controle de Gastos Residenciais
 
-Sistema completo para controle de gastos e receitas residenciais, permitindo o cadastro de pessoas, 
+Sistema para controle de gastos e receitas residenciais, permitindo o cadastro de pessoas, 
 categorias e transações financeiras, com regras de negócio bem definidas, relatórios consolidados e validações no backend.
 
 O projeto foi desenvolvido com foco em organização de código, clareza de regras de domínio e boa comunicação entre front-end e API, 
@@ -45,7 +45,7 @@ CSS-in-JS (estilos centralizados).
 O projeto segue uma separação clara de responsabilidades:
 
 ```
-### Backend
+Backend
 ├── Controllers
 ├── Services (regras de negócio)
 ├── DTOs
@@ -54,7 +54,7 @@ O projeto segue uma separação clara de responsabilidades:
 └── Data (DbContext)
 ```
 ```
-### Frontend
+Frontend
 ├── Pages
 ├── Services (integração com API)
 ├── Models (tipagens)
@@ -62,8 +62,7 @@ O projeto segue uma separação clara de responsabilidades:
 ```
 ## 📌 Conceitos Importantes do Domínio
 ### 👤 Pessoa
-Possui nome e idade
-Regra importante: pessoas menores de idade não podem ter receitas.
+Possui nome e idade.
 
 ## 🏷️ Categoria
 
@@ -88,10 +87,15 @@ public enum TipoTransacao
 }
 ```
 Cada transação está vinculada a:
+
 Uma pessoa
+
 Uma categoria
+
 Um tipo (Receita ou Despesa)
+
 Um valor
+
 Uma data
 
 ## 🔐 Regras de Negócio Implementadas
@@ -104,7 +108,7 @@ Se violada, a API retorna erro.
 ### Regra 2 — Compatibilidade entre categoria e transação
 A categoria só pode ser usada se sua finalidade for compatível com o tipo da transação:
 
-| Categoria | Pode ser usada em |
+| Categoria | Pode ser usada  |
 |----------|------------------|
 | Despesa  | Apenas Despesas  |
 | Receita  | Apenas Receitas  |
@@ -130,15 +134,23 @@ Total de receitas
 Total de despesas
 Saldo por categoria
 Total geral
+
 Os relatórios são calculados no backend e consumidos pelo frontend.
 
 ### 🧪 Testes Manuais Realizados
+
 Como forma de validação do funcionamento do sistema, foram realizados testes manuais, incluindo:
+
 — Cadastro de pessoas
+
 — Cadastro de categorias
+
 — Cadastro de transações
+
 — Exclusão de pessoa com remoção em cascata de suas transações
+
 — Tentativa de cadastrar receita para menor de idade (erro esperado)
+
 — Tentativa de usar categoria incompatível (erro esperado)
 
 ## 📸 Prints dessas validações estão disponíveis baixo:
